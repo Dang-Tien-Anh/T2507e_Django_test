@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from decimal import Decimal, InvalidOperation
 from .models import Book
 
-# --- Exercise 1: Book views ---
 def all_books(request):
     books = Book.objects.all()
     return render(request, 'books/all_books.html', {'books': books})
@@ -17,9 +17,7 @@ def book_count(request):
     return render(request, 'books/book_count.html', {'count': count})
 
 
-# --- Exercise 2: Authentication views ---
 def login_view(request):
-    # If already logged in, redirect root "/" to dashboard
     if request.user.is_authenticated:
         return redirect("dashboard")
 
@@ -41,3 +39,20 @@ def logout_view(request):
 @login_required(login_url="login")
 def dashboard(request):
     return render(request, "books/dashboard.html", {"username": request.user.username})
+
+from decimal import Decimal, InvalidOperation
+
+def add_book(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        author = request.POST.get("author")
+        price_input = request.POST.get("price")
+
+        try:
+            price = Decimal(price_input)
+            Book.objects.create(title=title, author=author, price=price)
+            return redirect("all_books")
+        except (InvalidOperation, TypeError):
+            return render(request, "base/add_book.html", {"error": "Invalid price format"})
+
+    return render(request, "base/add_book.html")
