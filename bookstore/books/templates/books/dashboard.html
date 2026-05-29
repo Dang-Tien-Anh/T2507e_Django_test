@@ -1,0 +1,7 @@
+{% extends 'books/base.html' %}
+
+{% block content %}
+<h2>Welcome, {{ username }}!</h2>
+<p>This is your dashboard or whatever.</p>
+<a href="{% url 'logout' %}">Logout</a>
+{% endblock %}
