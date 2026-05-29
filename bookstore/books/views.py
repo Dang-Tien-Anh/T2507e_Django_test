@@ -53,6 +53,6 @@ def add_book(request):
             Book.objects.create(title=title, author=author, price=price)
             return redirect("all_books")
         except (InvalidOperation, TypeError):
-            return render(request, "base/add_book.html", {"error": "Invalid price format"})
+            return render(request, "books/add_book.html", {"error": "Invalid price format"})
 
-    return render(request, "base/add_book.html")
+    return render(request, "books/add_book.html")
